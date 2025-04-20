@@ -10,7 +10,7 @@
   Last updated: April 18, 2025
 #>
 
-# Domains to verify
+# Domains to verify exist in uBlocks noFilter list
 $sitesRequired = @(
     "example3.com",
     "example4.com",
@@ -30,6 +30,7 @@ if (-not (Test-Path $regPath)) {
 # Try to get the JSON value (silently continue if missing)
 $currentJson = Get-ItemPropertyValue -Path $regPath -Name $valueName -ErrorAction SilentlyContinue
 
+# If the JSON value is null or empty, print and exit the program
 if (-not $currentJson) {
     Write-Output "Registry value '$valueName' not found or empty."
     exit 1
