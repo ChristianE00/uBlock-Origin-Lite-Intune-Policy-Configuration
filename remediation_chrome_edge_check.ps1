@@ -34,7 +34,7 @@ foreach ($browser in $policyPaths.Keys) {
     if (-not (Test-Path $regPath)) {
         try {
             New-Item -Path $regPath -Force | Out-Null
-            Write-Output "$browser: Created missing registry key $regPath"
+            Write-Output "$browser : Created missing registry key $regPath"
         }
         catch {
             Write-Output "Error: $browser cannot create registry key $regPath"
@@ -62,10 +62,10 @@ foreach ($browser in $policyPaths.Keys) {
     # If a JSON value was retrieved, convert it to a PowerShell array
     if ($existingJsonValue) {
         $existingDomainsList = $existingJsonValue | ConvertFrom-Json
-        Write-Output "$browser: Loaded existing domains: $($existingDomainsList -join ', ')"
+        Write-Output "$browser : Loaded existing domains: $($existingDomainsList -join ', ')"
     }
     else {
-        Write-Output "$browser: No existing 'noFiltering' value; starting with empty list."
+        Write-Output "$browser : No existing 'noFiltering' value; starting with empty list."
     }
 
     # Track whether we added any domains for this browser
@@ -74,12 +74,12 @@ foreach ($browser in $policyPaths.Keys) {
     # Loop through each required domain and append if missing
     foreach ($domain in $requiredDomains) {
         if ($domain -notin $existingDomainsList) {
-            Write-Output "$browser: Adding domain $domain"
+            Write-Output "$browser : Adding domain $domain"
             $existingDomainsList += $domain
             $hasModifications = $true
         }
         else {
-            Write-Output "$browser: Domain already present: $domain"
+            Write-Output "$browser : Domain already present: $domain"
         }
     }
 
@@ -93,7 +93,7 @@ foreach ($browser in $policyPaths.Keys) {
                 -Name  $noFilterValueName `
                 -Value $updatedJsonValue `
                 -Type  String
-            Write-Output "$browser: Registry updated successfully."
+            Write-Output "$browser : Registry updated successfully."
         }
         catch {
             Write-Output "Error: $browser failed to update registry - $($_.Exception.Message)"
@@ -101,7 +101,7 @@ foreach ($browser in $policyPaths.Keys) {
         }
     }
     else {
-        Write-Output "$browser: No changes required; list already up to date."
+        Write-Output "$browser : No changes required; list already up to date."
     }
 }
 
