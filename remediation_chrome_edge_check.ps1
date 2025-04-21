@@ -44,10 +44,17 @@ foreach ($browser in $policyPaths.Keys) {
     }
 
     # Retrieve the existing JSON string for noFiltering; ignore if not present
-    $existingJsonValue = Get-ItemPropertyValue `
-        -Path $regPath `
-        -Name $noFilterValueName `
-        -ErrorAction SilentlyContinue
+    #$existingjsonvalue = Get-ItemPropertyValue -Path $regPath -Name $noFilterValueName -ErrorAction SilentlyContinue
+
+		$existingJsonValue = $null
+		$entry = Get-ItemProperty -Path $regPath
+		if ($entry.PSObject.Properties.Name -contains $noFilterValueName) {
+			$existingJsonValue = $entry.$noFilterValueName
+			Write-Output "Existing domain filters found"
+	  }	
+		else {
+			Write-Output "No existing domain filters found"
+		}
 
     # Initialize an empty array for current domains
     $existingDomainsList = @()
