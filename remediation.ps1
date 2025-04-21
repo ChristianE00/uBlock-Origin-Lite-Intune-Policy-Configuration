@@ -26,7 +26,17 @@ if (-not (Test-Path $regPath)) {
 }
 
 # Retrieve the existing JSON string for noFiltering; ignore errors if it doesn't exist
-$existingJsonValue   = Get-ItemPropertyValue -Path $regPath -Name $noFilterValueName -ErrorAction SilentlyContinue
+##$existingJsonValue   = Get-ItemPropertyValue -Path $regPath -Name $noFilterValueName -ErrorAction SilentlyContinue
+
+$existingJsonValue = $null
+$entry = Get-ItemProperty -Path $regPath
+if ($entry.PSObject.Properties.Name -contains $noFilterValueName) {
+	$existingJsonValue = $entry.$noFilterValueName
+	Write-Output "Existing domain filters found"
+}
+else {
+	Write-Output "No existing domain filter were found"
+}
 
 # Initialize an empty array to hold the current domains
 $existingDomainsList = @()
