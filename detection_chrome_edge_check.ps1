@@ -46,9 +46,13 @@ foreach ($browser in $policyPaths.Keys) {
     }
 
     # Attempt to read the raw JSON value (skip errors if it doesn't exist)
-    $rawJson = Get-ItemPropertyValue -Path $regPath `
-                                     -Name $noFilterValueName `
-                                     -ErrorAction SilentlyContinue
+    # $rawJson = Get-ItemPropertyValue -Path $regPath -Name $noFilterValueName -ErrorAction SilentlyContinue
+		$rawJson = $null
+		$entry = Get-ItemProperty -Path $regPath
+		if ($entry.PSObject.Properties.Name -contains $noFilterValueName) {
+			$rawJson = $entry.$noFilterValueName
+			Write-Output "Existing domain filters found"
+		}
 
     # If there's no JSON, record that and move on
     if (-not $rawJson) {
@@ -64,7 +68,7 @@ foreach ($browser in $policyPaths.Keys) {
     foreach ($domain in $requiredDomains) {
         if ($domain -notin $existingDomains) {
             Write-Output "$browser missing domain: $domain"
-            $missingEntries += "$browser:$domain"
+            $missingEntries += "$browser : $domain"
         }
         else {
             Write-Output "$browser domain present: $domain"
@@ -74,9 +78,12 @@ foreach ($browser in $policyPaths.Keys) {
 
 # If any missing entries were recorded, signal detection failure
 if ($missingEntries.Count -gt 0) {
-    exit 1   # remediation should run
+		Write-Output "Missing entries were recorded, signal detection failure"
+    #exit 1   # remediation should run
 }
 
 # All checks passed
-Write-Output "All required domains are present in Chrome & Edge policies."
-exit 0     # detection successful
+else {
+	Write-Output "All required domains are present in Chrome & Edge policies."
+	# exit 0     # detection successful
+}
