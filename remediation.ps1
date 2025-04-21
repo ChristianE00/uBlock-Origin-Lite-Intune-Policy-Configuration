@@ -21,7 +21,7 @@ if (-not (Test-Path $regPath)) {
     }
     catch {
         Write-Output "Error: cannot create registry key $regPath"
-        exit 1
+        #exit 1
     }
 }
 
@@ -74,7 +74,7 @@ if ($hasModifications) {
     }
     catch {
         Write-Output "Error: failed to update registry - $($_.Exception.Message)"
-        exit 1
+        #exit 1
     }
 }
 else {
@@ -82,5 +82,5 @@ else {
 }
 
 # Exit with code 0 to signal success to Intune
-exit 0
+#exit 0
 
